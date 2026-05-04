@@ -104,9 +104,9 @@ class VectorStore:
         # ChromaDB upsert in batches of 500
         batch_size = 500
         for start in range(0, len(texts), batch_size):
-            batch_texts = texts[start: start + batch_size]
-            batch_ids = ids[start: start + batch_size]
-            batch_meta = metadatas[start: start + batch_size]
+            batch_texts = texts[start:start + batch_size]
+            batch_ids = ids[start:start + batch_size]
+            batch_meta = metadatas[start:start + batch_size]
             self._collection.upsert(
                 documents=batch_texts,
                 ids=batch_ids,
