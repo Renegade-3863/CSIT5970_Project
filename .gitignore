@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.eggs/
+dist/
+build/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment / secrets
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# ChromaDB persistent storage (large binary files)
+data/chroma_db/
+
+# Benchmark results (generated output)
+benchmark/results/
+
+# Temporary files
+/tmp/
+*.tmp
+*.log
+
+# macOS
+.DS_Store

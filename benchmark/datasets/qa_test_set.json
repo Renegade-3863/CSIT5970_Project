@@ -1,0 +1,202 @@
+[
+  {
+    "id": "q01",
+    "category": "linux_sysadmin",
+    "difficulty": "hard",
+    "question": "A production web server is experiencing high CPU usage (>90%) and slow response times. The process list shows multiple httpd workers consuming CPU. Describe a systematic diagnosis and resolution plan, including specific Linux commands you would use.",
+    "answer": "Systematic approach: 1) Use 'top' or 'htop' to identify the top CPU-consuming processes. 2) Run 'strace -p <pid>' to see system calls in real time. 3) Check 'perf top' for kernel-level hotspots. 4) Inspect 'netstat -tulpn | grep httpd' for excessive connections. 5) Review error logs: 'tail -f /var/log/httpd/error_log'. 6) Check for CPU-intensive modules: 'apachectl -M'. 7) Tune MaxRequestWorkers in httpd.conf. 8) Consider rate limiting with mod_evasive or moving to event MPM. 9) Enable mod_status to monitor worker states. 10) Profile application code if the issue is PHP/Python backend.",
+    "requires_rag": false
+  },
+  {
+    "id": "q02",
+    "category": "linux_sysadmin",
+    "difficulty": "hard",
+    "question": "Explain the difference between iptables PREROUTING, INPUT, FORWARD, OUTPUT, and POSTROUTING chains, and give a practical example of port forwarding rule using iptables NAT.",
+    "answer": "PREROUTING: Alters packets before routing (DNAT). INPUT: Packets destined for the local system. FORWARD: Packets being routed through the system. OUTPUT: Locally generated outbound packets. POSTROUTING: Alters packets after routing (SNAT/MASQUERADE). Port forwarding example: 'iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.1.10:8080' and 'iptables -t nat -A POSTROUTING -j MASQUERADE'. Enable IP forwarding: 'echo 1 > /proc/sys/net/ipv4/ip_forward'.",
+    "requires_rag": false
+  },
+  {
+    "id": "q03",
+    "category": "linux_sysadmin",
+    "difficulty": "medium",
+    "question": "How do you configure a cron job to run a backup script every weekday at 2:30 AM, and how do you ensure the job's output is logged?",
+    "answer": "Add to crontab with 'crontab -e': '30 2 * * 1-5 /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1'. The '1-5' represents Monday through Friday. Redirect stdout and stderr with '>> /var/log/backup.log 2>&1'. Use 'MAILTO=' at top of crontab to control email notifications. Consider using anacron for systems that may be powered off.",
+    "requires_rag": false
+  },
+  {
+    "id": "q04",
+    "category": "linux_sysadmin",
+    "difficulty": "hard",
+    "question": "A Linux system is running out of disk space on /var. Without rebooting, how would you identify large files, clean up space safely, and prevent recurrence?",
+    "answer": "Identify: 'du -sh /var/* | sort -rh | head -20', 'find /var -size +100M -type f'. Clean safely: truncate logs 'truncate -s 0 /var/log/syslog', clear old journals 'journalctl --vacuum-time=7d', remove old packages 'apt autoremove / yum autoremove'. Inode exhaustion check: 'df -i'. Prevent recurrence: configure logrotate, set up monitoring alerts with df/du in cron, consider separate /var partition, implement log shipping.",
+    "requires_rag": false
+  },
+  {
+    "id": "q05",
+    "category": "linux_sysadmin",
+    "difficulty": "medium",
+    "question": "Explain Linux load average. What does a load average of 4.5 mean on a 4-core CPU? At what point should you be concerned?",
+    "answer": "Load average represents the number of processes in a running or runnable (waiting for CPU) state over 1, 5, and 15-minute intervals. On a 4-core CPU, load of 4.0 means 100% utilization. A load of 4.5 means processes are queuing for CPU. Concern threshold: load > number of CPU cores. Check with 'uptime' or 'cat /proc/loadavg'. Distinguish CPU-bound vs I/O-bound workloads using 'iostat' and 'vmstat'.",
+    "requires_rag": false
+  },
+  {
+    "id": "q06",
+    "category": "security",
+    "difficulty": "hard",
+    "question": "Describe a complete SQL injection attack methodology, from initial detection to data extraction, and explain the corresponding defensive measures.",
+    "answer": "Detection: test with single quote ('), boolean-based payloads (1=1 vs 1=2), time-based (SLEEP(5)). Fingerprinting: error messages reveal DB type. Exploitation: UNION-based for column extraction, error-based, blind (boolean/time). Data extraction: enumerate databases, tables, columns via information_schema. Defenses: parameterized queries/prepared statements, input validation, WAF, least-privilege DB accounts, disable detailed error messages, use ORM frameworks.",
+    "requires_rag": false
+  },
+  {
+    "id": "q07",
+    "category": "security",
+    "difficulty": "hard",
+    "question": "What is Kerberoasting, how does it work in an Active Directory environment, and how can it be detected and mitigated?",
+    "answer": "Kerberoasting: Attacker with domain credentials requests TGS tickets for SPNs. Tickets encrypted with service account's NTLM hash. Offline cracking (hashcat) recovers password. Attack steps: enumerate SPNs (setspn -T domain -Q */*), request tickets (GetUserSPNs.py), crack offline. Detection: Windows event 4769 (Kerberos service ticket requested) with encryption type 0x17 (RC4). Mitigation: use AES-256 encryption for service tickets, managed service accounts (gMSA), long complex service account passwords (25+ chars), monitor 4769 events.",
+    "requires_rag": false
+  },
+  {
+    "id": "q08",
+    "category": "security",
+    "difficulty": "medium",
+    "question": "Explain the difference between symmetric and asymmetric encryption, provide examples of each, and describe a hybrid encryption scheme.",
+    "answer": "Symmetric: same key for encrypt/decrypt (AES-256, ChaCha20). Fast, used for bulk data. Key distribution problem. Asymmetric: public key encrypts, private key decrypts (RSA-2048, ECC). Slower, solves key distribution. Hybrid: use asymmetric to exchange a symmetric session key, then use symmetric for bulk data. Example: TLS 1.3 - ECDHE for key exchange, AES-256-GCM for data. SSH: RSA/ECDSA for authentication, AES for session encryption.",
+    "requires_rag": false
+  },
+  {
+    "id": "q09",
+    "category": "cloud",
+    "difficulty": "hard",
+    "question": "You need to design a highly available web application on AWS with auto-scaling, minimum cost, and the ability to handle 10x traffic spikes. Describe the architecture.",
+    "answer": "Architecture: Route53 (DNS with health checks) → CloudFront (CDN for static assets) → ALB (application load balancer across 2+ AZs) → Auto Scaling Group (EC2 or ECS Fargate) → ElastiCache (Redis for session/cache) → RDS Multi-AZ (PostgreSQL with read replicas) → S3 (static assets). For 10x spikes: reserved capacity for baseline, Spot instances for burst, pre-warm ALB, SQS for decoupling async workloads. Cost optimization: Savings Plans, right-sizing, S3 Intelligent Tiering.",
+    "requires_rag": false
+  },
+  {
+    "id": "q10",
+    "category": "cloud",
+    "difficulty": "hard",
+    "question": "Explain the differences between AWS IAM users, roles, and policies. Describe how cross-account access works and give an example using IAM roles.",
+    "answer": "Users: long-term credentials for human or service access. Roles: temporary credentials, assumed by entities (services, users, accounts). Policies: JSON documents defining permissions (identity-based, resource-based). Cross-account: Account A creates role with trust policy allowing Account B. Account B user calls sts:AssumeRole. Gets temporary credentials (15min-12hr). Example: Account B EC2 reads Account A S3 bucket. Trust policy allows arn:aws:iam::B:role/ec2-role. Permission policy grants s3:GetObject on Account A bucket.",
+    "requires_rag": false
+  },
+  {
+    "id": "q11",
+    "category": "devops",
+    "difficulty": "hard",
+    "question": "Design a CI/CD pipeline for a microservices application using GitHub Actions that includes testing, security scanning, building Docker images, and deploying to Kubernetes.",
+    "answer": "Pipeline stages: 1) Code checkout + dependency install. 2) Unit/integration tests (pytest/jest). 3) Static analysis (SonarQube/CodeQL). 4) Security scan (Snyk/Trivy for dependencies). 5) Docker build + SBOM generation. 6) Container scan (Trivy image scan). 7) Push to ECR/GHCR with SHA tag. 8) Update Kubernetes manifests (kustomize/helm values). 9) Apply to staging (kubectl/ArgoCD sync). 10) Smoke tests. 11) Manual gate for production. 12) Deploy to production + rollback on health check failure.",
+    "requires_rag": false
+  },
+  {
+    "id": "q12",
+    "category": "devops",
+    "difficulty": "medium",
+    "question": "What is the difference between horizontal and vertical scaling? In what scenarios would you choose each for a stateful database?",
+    "answer": "Vertical scaling: increase resources on single node (more CPU/RAM). Simple, limited by hardware ceiling, single point of failure. Horizontal scaling: add more nodes, distribute load. Complex, theoretically unlimited, better fault tolerance. For stateful databases: vertical for write-heavy OLTP (PostgreSQL primary). Horizontal for reads (read replicas). Sharding for massive scale (Cassandra, MongoDB). Consider: connection pooling (PgBouncer), CQRS pattern, eventual consistency trade-offs.",
+    "requires_rag": false
+  },
+  {
+    "id": "q13",
+    "category": "linux_sysadmin",
+    "difficulty": "hard",
+    "question": "Explain the Linux kernel's virtual memory management including swap, OOM killer, and how to tune vm.swappiness for a database server.",
+    "answer": "Virtual memory: each process has virtual address space mapped to physical memory via page tables. Pages swapped to disk when memory pressure. Swap: acts as overflow, accessed via swap space. OOM killer: when system runs out of memory, kernel selects and kills processes (oom_score). Tuning for DB server: set vm.swappiness=1 (prefer RAM over swap) with 'sysctl -w vm.swappiness=1'. Disable transparent hugepages for databases. Use vm.dirty_ratio and vm.dirty_background_ratio to tune write-back. Monitor with 'vmstat', 'free -h', '/proc/meminfo'.",
+    "requires_rag": false
+  },
+  {
+    "id": "q14",
+    "category": "networking",
+    "difficulty": "hard",
+    "question": "Describe the full TCP three-way handshake and how it handles connection establishment, including what happens during SYN flood attacks and the SYN cookie mitigation.",
+    "answer": "Three-way handshake: 1) Client sends SYN (seq=x). 2) Server responds SYN-ACK (seq=y, ack=x+1), allocates half-open connection in SYN queue. 3) Client sends ACK (ack=y+1), connection moves to ESTABLISHED. SYN flood: attacker sends many SYNs with spoofed IPs, exhausts SYN queue. SYN cookies: server encodes connection state in ISN (initial sequence number) instead of storing state. Only allocates resources when ACK arrives with valid cookie. Enable: 'sysctl -w net.ipv4.tcp_syncookies=1'. Additional mitigations: increase backlog, reduce SYN_RECV timeout.",
+    "requires_rag": false
+  },
+  {
+    "id": "q15",
+    "category": "containers",
+    "difficulty": "hard",
+    "question": "Explain the security model of Docker containers including namespaces, cgroups, and capabilities. What are the key security risks and how do you harden a container deployment?",
+    "answer": "Namespaces: isolate PID, network, mount, UTS, IPC, user. Cgroups: limit CPU, memory, I/O. Capabilities: fine-grained privileges (CAP_NET_ADMIN, etc.). Risks: privileged containers, running as root, exposed Docker socket, writable filesystems, container escape via kernel vulnerabilities. Hardening: run as non-root user (USER directive), read-only filesystem, drop all capabilities + add only needed, use seccomp profiles, AppArmor/SELinux policies, scan images with Trivy, sign images (cosign), avoid mounting Docker socket, use rootless Docker, network policies.",
+    "requires_rag": false
+  },
+  {
+    "id": "q16",
+    "category": "linux_sysadmin",
+    "difficulty": "medium",
+    "question": "How do you set up log rotation with logrotate for a custom application log that generates large files daily, keeping 14 days of compressed logs?",
+    "answer": "Create /etc/logrotate.d/myapp:\n/var/log/myapp/*.log {\n    daily\n    rotate 14\n    compress\n    delaycompress\n    missingok\n    notifempty\n    create 0640 appuser appgroup\n    sharedscripts\n    postrotate\n        systemctl reload myapp 2>/dev/null || true\n    endscript\n}\nTest with: 'logrotate -d /etc/logrotate.d/myapp' (dry run). Force: 'logrotate -f /etc/logrotate.d/myapp'.",
+    "requires_rag": false
+  },
+  {
+    "id": "q17",
+    "category": "security",
+    "difficulty": "hard",
+    "question": "Explain how a buffer overflow exploit works at the assembly level, including stack layout, return address overwrite, and modern mitigations like ASLR, NX, and stack canaries.",
+    "answer": "Stack layout: local vars → saved frame pointer → return address → function args. Overflow: write beyond buffer to overwrite return address with attacker-controlled value (shellcode addr or ROP gadget). Mitigations: ASLR (randomizes stack/heap/library addresses), NX/DEP (marks stack non-executable), stack canaries (random value before ret addr, checked before return), PIE (position-independent executable). Bypass techniques: ret2libc, ROP chains (reuse existing code gadgets), heap spraying, format string bugs for info leak to defeat ASLR.",
+    "requires_rag": false
+  },
+  {
+    "id": "q18",
+    "category": "devops",
+    "difficulty": "hard",
+    "question": "Design a Kubernetes resource quota and limits strategy for a multi-tenant cluster with 10 teams, ensuring fair resource allocation and preventing noisy neighbor problems.",
+    "answer": "Strategy: 1) Namespace per team. 2) ResourceQuota per namespace (CPU requests/limits, memory, PVC count, pod count). 3) LimitRange to enforce default requests/limits per pod/container. 4) PriorityClasses for critical vs batch workloads. 5) Network policies for isolation. 6) HPA for auto-scaling within quotas. 7) Node selectors / taints for dedicated nodes if needed. 8) Monitoring: Prometheus + Grafana dashboards per namespace. 9) RBAC: teams can only manage their namespace. 10) Regular quota review based on actual usage.",
+    "requires_rag": false
+  },
+  {
+    "id": "q19",
+    "category": "monitoring",
+    "difficulty": "hard",
+    "question": "Describe how you would implement a complete observability stack (metrics, logs, traces) for a microservices application, including specific tools and integration points.",
+    "answer": "Metrics: Prometheus (scrape) + Grafana (dashboards) + AlertManager (PagerDuty integration). Instrument apps with Prometheus client libraries. Logs: structured JSON logging → Fluentd/Vector → Elasticsearch/OpenSearch → Kibana. Traces: OpenTelemetry SDK in services → Jaeger/Tempo. Correlation: inject trace_id into logs for cross-signal correlation. Service mesh: Istio/Linkerd for automatic metrics/traces. Dashboards: USE method (Utilization, Saturation, Errors) for resources, RED method (Rate, Errors, Duration) for services. Runbooks in Grafana annotations.",
+    "requires_rag": false
+  },
+  {
+    "id": "q20",
+    "category": "linux_sysadmin",
+    "difficulty": "hard",
+    "question": "You suspect a Linux system has been compromised. Describe the forensic investigation process you would follow to collect evidence without altering the system state.",
+    "answer": "Forensic process: 1) Do NOT reboot - volatile data lost. 2) Isolate: disconnect network but preserve running state. 3) Capture volatile data first: memory dump (LiME kernel module), running processes (ps auxef), network connections (ss -tupn), loaded kernel modules (lsmod). 4) Disk image: dd/dcfldd of disk to write-protected destination. 5) Check for rootkits: compare against known-good binaries (rkhunter, chkrootkit). 6) Review: /tmp, /dev/shm, crontabs, SUID files (find / -perm -4000), recently modified files (find / -mtime -7), auth logs, bash_history, /proc/[pid]/maps. 7) Preserve chain of custody.",
+    "requires_rag": false
+  },
+  {
+    "id": "q21",
+    "category": "rag_specific",
+    "difficulty": "hard",
+    "question": "Based on the knowledge base documents, what are the recommended kernel parameters (sysctl settings) for tuning a high-performance PostgreSQL database server on Linux?",
+    "answer": "Key sysctl settings for PostgreSQL: vm.swappiness=1 (minimize swapping), vm.dirty_ratio=10, vm.dirty_background_ratio=5 (control write-back), kernel.shmmax and kernel.shmall for shared memory, vm.overcommit_memory=2 with vm.overcommit_ratio=80, net.core.somaxconn=65535 for connection backlog, vm.nr_hugepages for huge pages (postgresql.conf huge_pages=on). Disable transparent hugepages: echo never > /sys/kernel/mm/transparent_hugepage/enabled.",
+    "requires_rag": true
+  },
+  {
+    "id": "q22",
+    "category": "rag_specific",
+    "difficulty": "hard",
+    "question": "According to the knowledge base, what are the OWASP Top 10 vulnerabilities for 2021 and which ones have the highest impact for web API security?",
+    "answer": "OWASP Top 10 2021: A01 Broken Access Control, A02 Cryptographic Failures, A03 Injection, A04 Insecure Design, A05 Security Misconfiguration, A06 Vulnerable Components, A07 ID/Auth Failures, A08 Software/Data Integrity Failures, A09 Logging/Monitoring Failures, A10 SSRF. Highest API impact: A01 (BOLA/IDOR - object-level auth missing), A03 (injection in API params), A07 (broken auth tokens), A09 (insufficient logging of API abuse).",
+    "requires_rag": true
+  },
+  {
+    "id": "q23",
+    "category": "rag_specific",
+    "difficulty": "hard",
+    "question": "From the knowledge base, describe the recommended procedure for performing a zero-downtime database migration on a high-traffic production system.",
+    "answer": "Zero-downtime migration steps: 1) Add new columns (non-destructive). 2) Deploy code that writes to both old and new columns. 3) Backfill existing rows in batches (avoid table lock). 4) Deploy code that reads from new columns. 5) Verify data consistency. 6) Remove old columns/code in subsequent release. Use tools: pg_repack for PostgreSQL table rewrites, gh-ost for MySQL. Feature flags to control cutover. Blue-green deployment for major schema changes. Always test migration on production-size data copy first.",
+    "requires_rag": true
+  },
+  {
+    "id": "q24",
+    "category": "rag_specific",
+    "difficulty": "medium",
+    "question": "What Kubernetes security best practices are documented in the knowledge base for securing a multi-tenant production cluster?",
+    "answer": "Kubernetes security best practices: enable RBAC with least-privilege, use namespaces for isolation, apply NetworkPolicies (default deny all), enable PodSecurityAdmission (restricted profile), use OPA/Gatekeeper for policy enforcement, enable audit logging, scan images in registry, use Pod Security Standards, disable service account token automounting where not needed, use Secrets management (Vault/External Secrets), enable etcd encryption at rest, rotate certificates, use mTLS (service mesh).",
+    "requires_rag": true
+  },
+  {
+    "id": "q25",
+    "category": "rag_specific",
+    "difficulty": "hard",
+    "question": "Based on the knowledge base, what is the recommended incident response playbook for a detected container escape vulnerability in a production Kubernetes cluster?",
+    "answer": "Incident response for container escape: 1) Immediate containment: cordon affected nodes (kubectl cordon), drain and isolate. 2) Evidence collection: capture node memory, container logs, syscall audit logs. 3) Identify blast radius: check which pods ran on compromised nodes, review RBAC permissions of those service accounts. 4) Patch: update container runtime (containerd/runc), apply kernel patches. 5) Verify: scan remaining nodes with Falco or Sysdig. 6) Post-incident: implement Falco rules for escape detection, enable seccomp/AppArmor profiles, review privileged pod usage.",
+    "requires_rag": true
+  }
+]

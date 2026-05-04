@@ -1,0 +1,53 @@
+# Agent Configuration
+agent:
+  name: "CSIT5970 Custom Agent"
+  version: "1.0.0"
+  max_iterations: 10
+  verbose: true
+
+# LLM Settings
+llm:
+  provider: "openai"          # openai | anthropic
+  model: "gpt-4o-mini"        # Default model (cost-effective)
+  temperature: 0.1
+  max_tokens: 4096
+  timeout: 60
+
+# Persona Settings
+persona:
+  default: "general"          # general | linux_expert | security_expert
+  inject_in_system: true
+
+# RAG Settings
+rag:
+  enabled: true
+  vector_db: "chromadb"
+  collection_name: "knowledge_base"
+  persist_directory: "./data/chroma_db"
+  embedding_model: "all-MiniLM-L6-v2"   # local sentence-transformer model
+  top_k: 5
+  similarity_threshold: 0.4
+
+# Tools Settings
+tools:
+  enabled:
+    - knowledge_base
+    - code_executor
+    - web_search
+  code_executor:
+    timeout: 30
+    allowed_languages:
+      - python
+      - bash
+  web_search:
+    max_results: 5
+
+# Benchmark Settings
+benchmark:
+  judge_model: "gpt-4o"
+  output_dir: "./benchmark/results"
+  test_set_path: "./benchmark/datasets/qa_test_set.json"
+  modes:
+    - llm_only
+    - vanilla_agent
+    - custom_agent_with_rag
