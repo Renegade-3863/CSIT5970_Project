@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  # ── Main agent service ──────────────────────────────────────────────────
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: csit5970-agent:latest
+    container_name: csit5970_agent
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    volumes:
+      - chroma_data:/app/data/chroma_db
+      - benchmark_results:/app/benchmark/results
+    stdin_open: true
+    tty: true
+    restart: "no"
+    networks:
+      - agent_net
+
+  # ── Knowledge base indexer (one-shot service) ──────────────────────────
+  kb_indexer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: csit5970-agent:latest
+    container_name: csit5970_kb_indexer
+    command: ["--index-kb"]
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - chroma_data:/app/data/chroma_db
+    networks:
+      - agent_net
+    profiles:
+      - indexer
+
+  # ── Benchmark runner (one-shot service) ───────────────────────────────
+  benchmark:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: csit5970-agent:latest
+    container_name: csit5970_benchmark
+    command: ["--benchmark"]
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - chroma_data:/app/data/chroma_db
+      - benchmark_results:/app/benchmark/results
+    networks:
+      - agent_net
+    profiles:
+      - benchmark
+
+volumes:
+  chroma_data:
+    driver: local
+  benchmark_results:
+    driver: local
+
+networks:
+  agent_net:
+    driver: bridge
