@@ -1,8 +1,6 @@
 project_dir: /workspace/django__django-11049
-commands_run:
-  1. cd /workspace/django__django-11049 && python -c "..." (full duration field test suite via unittest)
-     - test_invalid_string ... ok
-     - test_formfield ... ok
-  2. Ran 2 tests in 0.000s
-     OK
-tests_passed: yes
+commands_run: 
+  - grep -r "DD\]" django/db/models/fields/__init__.py tests/model_fields/test_durationfield.py
+  - python -c "import sys; sys.path.insert(0, '.'); sys.path.insert(0, 'tests'); from django.db.models.fields import DurationField; ..."  (failed due to missing cgi module on Python 3.13)
+  - grep "\\[DD\\] \\[\\[HH:\\]MM:\\]ss" django/db/models/fields/__init__.py tests/model_fields/test_durationfield.py
+tests_passed: unknown (cannot run tests due to Python 3.13 incompatibility with this Django version - cgi module removed)

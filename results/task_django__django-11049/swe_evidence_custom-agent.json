@@ -7,16 +7,18 @@
       "task_type": "swe",
       "benchmark": "swe-bench-lite",
       "has_patch": true,
-      "patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex f32ce6462..71005490f 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -1587,7 +1587,7 @@ class DurationField(Field):\n     empty_strings_allowed = False\n     default_error_messages = {\n         'invalid': _(\"'%(value)s' value has an invalid format. It must be in \"\n-                     \"[DD] [HH:[MM:]]ss[.uuuuuu] format.\")\n+                     \"[DD] [[HH:]MM:]ss[.uuuuuu] format.\")\n     }\n     description = _(\"Duration\")\n \ndiff --git a/tests/model_fields/test_durationfield.py b/tests/model_fields/test_durationfield.py\nindex b73994f86..f1c82ab8b 100644\n--- a/tests/model_fields/test_durationfield.py\n+++ b/tests/model_fields/test_durationfield.py\n@@ -75,7 +75,7 @@ class TestValidation(SimpleTestCase):\n         self.assertEqual(\n             cm.exception.message % cm.exception.params,\n             \"'not a datetime' value has an invalid format. \"\n-            \"It must be in [DD] [HH:[MM:]]ss[.uuuuuu] format.\"\n+            \"It must be in [DD] [[HH:]MM:]ss[.uuuuuu] format.\"\n         )\n \n \n",
+      "patch": "diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py\nindex f32ce646..71005490 100644\n--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -1587,7 +1587,7 @@ class DurationField(Field):\n     empty_strings_allowed = False\n     default_error_messages = {\n         'invalid': _(\"'%(value)s' value has an invalid format. It must be in \"\n-                     \"[DD] [HH:[MM:]]ss[.uuuuuu] format.\")\n+                     \"[DD] [[HH:]MM:]ss[.uuuuuu] format.\")\n     }\n     description = _(\"Duration\")\n \ndiff --git a/tests/model_fields/test_durationfield.py b/tests/model_fields/test_durationfield.py\nindex b73994f8..f1c82ab8 100644\n--- a/tests/model_fields/test_durationfield.py\n+++ b/tests/model_fields/test_durationfield.py\n@@ -75,7 +75,7 @@ class TestValidation(SimpleTestCase):\n         self.assertEqual(\n             cm.exception.message % cm.exception.params,\n             \"'not a datetime' value has an invalid format. \"\n-            \"It must be in [DD] [HH:[MM:]]ss[.uuuuuu] format.\"\n+            \"It must be in [DD] [[HH:]MM:]ss[.uuuuuu] format.\"\n         )\n \n \n",
       "has_test_command": true,
-      "last_pytest_summary": "Ran 2 tests in 0.000s - OK (test_invalid_string, test_formfield)",
-      "tests_passed": true,
-      "passed_count": 2,
+      "last_pytest_summary": "Cannot run tests: Python 3.13 removed cgi module",
+      "tests_passed": false,
+      "passed_count": 0,
       "commands_run": [
-        "python -m unittest tests.model_fields.test_durationfield"
+        "cd /workspace/django__django-11049 && python -m django test model_fields.test_durationfield --settings=tests.test_sqlite -v2"
       ],
-      "fatal_error_count": 0,
-      "fatal_errors_sample": [],
+      "fatal_error_count": 1,
+      "fatal_errors_sample": [
+        "ModuleNotFoundError: No module named 'cgi'"
+      ],
       "has_tool_evidence": true,
       "has_test_results_section": true
     }
