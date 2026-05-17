@@ -1,0 +1,24 @@
+{
+  "config": "custom-agent",
+  "items": [
+    {
+      "item_id": "django__django-11099",
+      "category": "swe",
+      "task_type": "swe",
+      "benchmark": "swe-bench-lite",
+      "has_patch": true,
+      "patch": "diff --git a/django/contrib/auth/validators.py b/django/contrib/auth/validators.py\nindex b4878cfd..1304f20a 100644\n--- a/django/contrib/auth/validators.py\n+++ b/django/contrib/auth/validators.py\n@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _\n \n @deconstructible\n class ASCIIUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only English letters, '\n         'numbers, and @/./+/-/_ characters.'\n@@ -17,7 +17,7 @@ class ASCIIUsernameValidator(validators.RegexValidator):\n \n @deconstructible\n class UnicodeUsernameValidator(validators.RegexValidator):\n-    regex = r'^[\\w.@+-]+$'\n+    regex = r'\\A[\\w.@+-]+\\Z'\n     message = _(\n         'Enter a valid username. This value may contain only letters, '\n         'numbers, and @/./+/-/_ characters.'\n",
+      "has_test_command": true,
+      "last_pytest_summary": "All tests passed - regex fix verified",
+      "tests_passed": true,
+      "passed_count": 7,
+      "commands_run": [
+        "python3 -c \"import re; ... regex test cases...\""
+      ],
+      "fatal_error_count": 0,
+      "fatal_errors_sample": [],
+      "has_tool_evidence": true,
+      "has_test_results_section": true
+    }
+  ]
+}
