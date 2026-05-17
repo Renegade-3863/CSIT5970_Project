@@ -1,0 +1,24 @@
+{
+  "config": "custom-agent",
+  "items": [
+    {
+      "item_id": "django__django-11039",
+      "category": "swe",
+      "task_type": "swe",
+      "benchmark": "swe-bench-lite",
+      "has_patch": true,
+      "patch": "diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py\nindex f0b663222..b51d1739a 100644\n--- a/django/core/management/commands/sqlmigrate.py\n+++ b/django/core/management/commands/sqlmigrate.py\n@@ -56,7 +56,7 @@ class Command(BaseCommand):\n         targets = [(app_label, migration.name)]\n \n         # Show begin/end around output only for atomic migrations\n-        self.output_transaction = migration.atomic\n+        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl\n \n         # Make a plan that represents just the requested migrations and show SQL\n         # for it\n",
+      "has_test_command": true,
+      "last_pytest_summary": "All tests passed (3/3)",
+      "tests_passed": true,
+      "passed_count": 3,
+      "commands_run": [
+        "python -c \"...comprehensive verification tests...\""
+      ],
+      "fatal_error_count": 0,
+      "fatal_errors_sample": [],
+      "has_tool_evidence": true,
+      "has_test_results_section": true
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+Project directory: /workspace/django__django-11039
+Commands run: python3 verification script testing 3 scenarios
+  - Test 1: Non-atomic migration - PASS (no BEGIN/COMMIT)
+  - Test 2: Atomic migration with can_rollback_ddl=False - PASS (no BEGIN/COMMIT)
+  - Test 3: Atomic migration with can_rollback_ddl=True - PASS (BEGIN/COMMIT present)
+Tests passed: yes
