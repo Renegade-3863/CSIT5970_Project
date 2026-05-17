@@ -1,14 +1,14 @@
 TEST_RESULTS:
-  project_dir: /workspace/django__django-11099
-  commands_run:
-    - "cd /workspace/django__django-11099 && python3 -c \"import re; old_re = re.compile(r'^[\\w.@+-]+$'); new_re = re.compile(r'\\A[\\w.@+-]+\\Z'); print('Old regex accepts trailing newline:', bool(old_re.match('user123\\n'))); print('New regex rejects trailing newline:', not bool(new_re.match('user123\\n'))); print('Valid usernames still accepted:', bool(new_re.match('user123')))"
-  tests_passed: yes
-  note: >
-    The old regex r'^[\w.@+-]+$' incorrectly accepts usernames with trailing newlines
-    because $ matches before a trailing newline in Python regex. The fix changes both
-    ASCIIUsernameValidator and UnicodeUsernameValidator to use \A and \Z anchors
-    instead of ^ and $, which correctly reject trailing newlines.
-    
-    Full Django test suite could not be run because Python 3.13 removed the 'cgi'
-    module (removed in Python 3.13, Django's http/multipartparser.py still imports it).
-    However, the regex fix was verified directly with Python's re module.
+  - project_dir: /workspace/django__django-11099
+  - commands_run:
+      - python3 _run_test.py
+      - Output: "Total: 14, Passed: 14, Failed: 0"
+  - tests_passed: yes
+
+NOTE: Full Django test suite could not be run due to Python 3.13
+removing the 'cgi' module and other dependency changes. The fix was
+verified by:
+1. Direct regex testing confirming '\A...\Z' rejects trailing newlines
+2. Testing the actual validator classes with Django setup (mocking cgi)
+   confirming both ASCIIUsernameValidator and UnicodeUsernameValidator
+   now reject usernames with trailing newlines
