@@ -1,0 +1,8 @@
+TEST_RESULTS:
+  project_dir: /workspace/task_django__django-11564
+  commands_run: |
+    1. python3 -c "import sys; sys.path.insert(0, 'tests'); ..." (StaticTagTests)
+       Output: Ran 11 tests in 0.071s - OK
+    2. python3 -c "import sys, os; sys.path.insert(0, 'tests'); ..." (TestTemplateTag)
+       Output: Ran 2 tests in 0.028s - OK
+  tests_passed: yes
