@@ -1,5 +1,5 @@
 diff --git a/django/contrib/auth/validators.py b/django/contrib/auth/validators.py
-index b4878cfd..1304f20a 100644
+index b4878cfd4..1304f20a6 100644
 --- a/django/contrib/auth/validators.py
 +++ b/django/contrib/auth/validators.py
 @@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
