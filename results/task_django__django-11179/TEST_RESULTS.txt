@@ -1,0 +1,7 @@
+TEST_RESULTS:
+  - project_dir: /root/Documents/github/Agent_Demo/task_django__django-11179
+  - commands_run: |
+      python -m django test tests.delete --settings=test_sqlite
+      -> Failed: ModuleNotFoundError: No module named 'cgi'
+      (Python 3.13 removed the cgi module which this Django version depends on)
+  - tests_passed: unknown (environment not suitable to run tests)
