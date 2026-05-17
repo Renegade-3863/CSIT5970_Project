@@ -1,0 +1,10 @@
+TEST_RESULTS:
+  - project_dir: /workspace/task_astropy__astropy_7746
+  - commands_run: |
+      # Tried to run: python -c "test with numpy/astropy WCS"
+      # Failed: ImportError due to Python 3.13 incompatibility with old astropy
+      # (collections.Mapping removed, etc.)
+      # 
+      # Syntax verified: python -c "compile(open('astropy/wcs/wcs.py').read(), 'astropy/wcs/wcs.py', 'exec'); print('Syntax OK')"
+      # -> Syntax OK
+  - tests_passed: unknown (incompatible Python environment)
