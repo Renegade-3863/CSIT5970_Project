@@ -1,6 +1,34 @@
-project_dir: /workspace/django__django-11049
-commands_run: 
-  - grep -r "DD\]" django/db/models/fields/__init__.py tests/model_fields/test_durationfield.py
-  - python -c "import sys; sys.path.insert(0, '.'); sys.path.insert(0, 'tests'); from django.db.models.fields import DurationField; ..."  (failed due to missing cgi module on Python 3.13)
-  - grep "\\[DD\\] \\[\\[HH:\\]MM:\\]ss" django/db/models/fields/__init__.py tests/model_fields/test_durationfield.py
-tests_passed: unknown (cannot run tests due to Python 3.13 incompatibility with this Django version - cgi module removed)
+TEST_RESULTS:
+  - project_dir: /workspace/django__django-11049
+  - commands_run: |
+      cd /workspace/django__django-11049 && git add -A && git diff --cached
+      (Tests could not be run due to Python 3.13 missing 'cgi' stdlib module;
+       the SWE-bench harness will execute them with the correct Python version.)
+  - tests_passed: unknown
+PATCH:
+diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
+index f32ce6462..71005490f 100644
+--- a/django/db/models/fields/__init__.py
++++ b/django/db/models/fields/__init__.py
+@@ -1587,7 +1587,7 @@ class DurationField(Field):
+     empty_strings_allowed = False
+     default_error_messages = {
+         'invalid': _("'%(value)s' value has an invalid format. It must be in "
+-                     "[DD] [HH:[MM:]]ss[.uuuuuu] format.")
++                     "[DD] [[HH:]MM:]ss[.uuuuuu] format.")
+     }
+     description = _("Duration")
+ 
+diff --git a/tests/model_fields/test_durationfield.py b/tests/model_fields/test_durationfield.py
+index b73994f86..f1c82ab8b 100644
+--- a/tests/model_fields/test_durationfield.py
++++ b/tests/model_fields/test_durationfield.py
+@@ -75,7 +75,7 @@ class TestValidation(SimpleTestCase):
+         self.assertEqual(
+             cm.exception.message % cm.exception.params,
+             "'not a datetime' value has an invalid format. "
+-            "It must be in [DD] [HH:[MM:]]ss[.uuuuuu] format."
++            "It must be in [DD] [[HH:]MM:]ss[.uuuuuu] format."
+         )
+ 
+ 

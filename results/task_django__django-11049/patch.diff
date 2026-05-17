@@ -1,5 +1,5 @@
 diff --git a/django/db/models/fields/__init__.py b/django/db/models/fields/__init__.py
-index f32ce646..71005490 100644
+index f32ce6462..71005490f 100644
 --- a/django/db/models/fields/__init__.py
 +++ b/django/db/models/fields/__init__.py
 @@ -1587,7 +1587,7 @@ class DurationField(Field):
@@ -12,7 +12,7 @@ index f32ce646..71005490 100644
      description = _("Duration")
  
 diff --git a/tests/model_fields/test_durationfield.py b/tests/model_fields/test_durationfield.py
-index b73994f8..f1c82ab8 100644
+index b73994f86..f1c82ab8b 100644
 --- a/tests/model_fields/test_durationfield.py
 +++ b/tests/model_fields/test_durationfield.py
 @@ -75,7 +75,7 @@ class TestValidation(SimpleTestCase):
