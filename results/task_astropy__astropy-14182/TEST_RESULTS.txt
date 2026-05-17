@@ -1,0 +1,4 @@
+TEST_RESULTS:
+- project_dir: /workspace/task_astropy__astropy-14182
+- commands_run: pip install -e . failed due to numpy version incompatibility in dev environment
+- tests_passed: unknown (environment could not import astropy due to numpy version conflict)

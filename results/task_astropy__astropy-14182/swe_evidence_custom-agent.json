@@ -1,0 +1,24 @@
+{
+  "config": "custom-agent",
+  "items": [
+    {
+      "item_id": "astropy__astropy-14182",
+      "category": "swe",
+      "task_type": "swe",
+      "benchmark": "swe-bench-lite",
+      "has_patch": true,
+      "patch": "diff --git a/astropy/io/ascii/rst.py b/astropy/io/ascii/rst.py\nindex abdeba8..97daf5d 100644\n--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -57,10 +57,11 @@ class RST(FixedWidth):\n     data_class = SimpleRSTData\n     header_class = SimpleRSTHeader\n \n-    def __init__(self):\n-        super().__init__(delimiter_pad=None, bookend=False)\n+    def __init__(self, header_rows=None):\n+        super().__init__(delimiter_pad=None, bookend=False, header_rows=header_rows)\n \n     def write(self, lines):\n         lines = super().write(lines)\n-        lines = [lines[1]] + lines + [lines[1]]\n+        header_rows = getattr(self.data, 'header_rows', ['name'])\n+        lines = [lines[len(header_rows)]] + lines + [lines[len(header_rows)]]\n         return lines",
+      "has_test_command": false,
+      "last_pytest_summary": "Environment not set up to run tests (numpy version conflict)",
+      "tests_passed": false,
+      "passed_count": 0,
+      "commands_run": [],
+      "fatal_error_count": 1,
+      "fatal_errors_sample": [
+        "numpy version incompatible with this astropy version"
+      ],
+      "has_tool_evidence": true,
+      "has_test_results_section": true
+    }
+  ]
+}
