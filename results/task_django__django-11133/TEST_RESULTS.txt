@@ -1,5 +1,10 @@
-Project directory: /workspace/django__django-11133
-Commands run:
-  1. python -c "test make_bytes with memoryview" - PASS (memoryview correctly converted to bytes)
-  2. python -c "run httpwrappers tests" - Ran 64 tests in 0.027s - OK (all 64 passed)
-Tests passed: yes
+Testing Environment Notes:
+- Python 3.13.13 is installed in this sandbox
+- The cgi module was removed in Python 3.13, which is required by this old Django version
+- Cannot run the full test suite in this environment
+
+Manual verification performed:
+- Confirmed that bytes(memoryview(b"test")) correctly returns b"test"
+- Confirmed that the old behavior produces b"<memory at 0x...>" instead
+
+Fix applied: django/http/response.py - Changed isinstance(value, bytes) to isinstance(value, (bytes, memoryview)) in make_bytes method.

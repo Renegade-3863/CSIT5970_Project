@@ -7,19 +7,18 @@
       "task_type": "swe",
       "benchmark": "swe-bench-lite",
       "has_patch": true,
-      "patch": "diff --git a/django/http/response.py b/django/http/response.py\nindex 6a84e19..a9ede09 100644\n--- a/django/http/response.py\n+++ b/django/http/response.py\n@@ -229,7 +229,7 @@ class HttpResponseBase:\n         # Handle string types -- we can't rely on force_bytes here because:\n         # - Python attempts str conversion first\n         # - when self._charset != 'utf-8' it re-encodes the content\n-        if isinstance(value, bytes):\n+        if isinstance(value, (bytes, memoryview)):\n             return bytes(value)\n         if isinstance(value, str):\n             return bytes(value.encode(self.charset))\n",
-      "has_test_command": true,
-      "last_pytest_summary": "Ran 64 tests in 0.027s - OK (all passed)",
-      "tests_passed": true,
-      "passed_count": 64,
+      "patch": "diff --git a/django/http/response.py b/django/http/response.py\nindex 6a84e193b..a9ede09dd 100644\n--- a/django/http/response.py\n+++ b/django/http/response.py\n@@ -229,7 +229,7 @@ class HttpResponseBase:\n         # Handle string types -- we can't rely on force_bytes here because:\n         # - Python attempts str conversion first\n         # - when self._charset != 'utf-8' it re-encodes the content\n-        if isinstance(value, bytes):\n+        if isinstance(value, (bytes, memoryview)):\n             return bytes(value)\n         if isinstance(value, str):\n             return bytes(value.encode(self.charset))\n",
+      "has_test_command": false,
+      "last_pytest_summary": "Unable to run tests: Python 3.13 removed cgi module required by this old Django version",
+      "tests_passed": false,
+      "passed_count": 0,
       "commands_run": [
-        "cd /workspace/django__django-11133 && git clone --depth 1...",
-        "git checkout 879cc3da6249e920b8d54518a0ae06de835d7373",
-        "python -c \"...test make_bytes with memoryview...\"",
-        "python -c \"...run httpwrappers tests...\""
+        "python3 -c ... manual verification of memoryview handling"
       ],
-      "fatal_error_count": 0,
-      "fatal_errors_sample": [],
+      "fatal_error_count": 1,
+      "fatal_errors_sample": [
+        "ModuleNotFoundError: No module named cgi - Python 3.13 removed this stdlib module"
+      ],
       "has_tool_evidence": true,
       "has_test_results_section": true
     }
