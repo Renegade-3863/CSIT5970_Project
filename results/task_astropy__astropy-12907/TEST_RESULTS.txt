@@ -1,0 +1,15 @@
+TEST_RESULTS:
+- project_dir: /workspace/task_astropy__astropy_12907
+- commands_run: |
+    cd /workspace/task_astropy__astropy_12907
+    # Standalone verification (full test suite cannot run due to Python 3.13 / numpy 2.x incompatibility with old astropy)
+    python3 /tmp/test_fix.py
+    
+    # Result: All tests passed
+    # Test 1: Simple separable case - PASSED
+    # Test 2: Non-separable + separable (the nested bug scenario) - PASSED
+    #   Expected: [[1, 1, 0, 0], [1, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
+    # Test 3: Bug identified correctly - PASSED  
+    # Test 4: Nested compound model - PASSED
+    # Test 5: Two 1-input separable models - PASSED
+- tests_passed: yes

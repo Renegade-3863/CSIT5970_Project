@@ -1,0 +1,24 @@
+{
+  "config": "custom-agent",
+  "items": [
+    {
+      "item_id": "astropy__astropy-12907",
+      "category": "swe",
+      "task_type": "swe",
+      "benchmark": "swe-bench-lite",
+      "has_patch": true,
+      "patch": "diff --git a/astropy/modeling/separable.py b/astropy/modeling/separable.py\nindex a308e27..45bea36 100644\n--- a/astropy/modeling/separable.py\n+++ b/astropy/modeling/separable.py\n@@ -242,7 +242,7 @@ def _cstack(left, right):\n         cright = _coord_matrix(right, 'right', noutp)\n     else:\n         cright = np.zeros((noutp, right.shape[1]))\n-        cright[-right.shape[0]:, -right.shape[1]:] = 1\n+        cright[-right.shape[0]:, -right.shape[1]:] = right\n \n     return np.hstack([cleft, cright])\n \n",
+      "has_test_command": true,
+      "last_pytest_summary": "Standalone tests passed. Full test suite blocked by Python 3.13 / numpy 2.x incompatibility with old astropy (missing np.product, np.trapz, etc.)",
+      "tests_passed": true,
+      "passed_count": 5,
+      "commands_run": [
+        "python3 /tmp/test_fix.py"
+      ],
+      "fatal_error_count": 0,
+      "fatal_errors_sample": [],
+      "has_tool_evidence": true,
+      "has_test_results_section": true
+    }
+  ]
+}
