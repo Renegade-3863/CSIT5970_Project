@@ -1,6 +1,15 @@
-Project directory: /workspace/django__django-11039
-Commands run: python3 verification script testing 3 scenarios
-  - Test 1: Non-atomic migration - PASS (no BEGIN/COMMIT)
-  - Test 2: Atomic migration with can_rollback_ddl=False - PASS (no BEGIN/COMMIT)
-  - Test 3: Atomic migration with can_rollback_ddl=True - PASS (BEGIN/COMMIT present)
-Tests passed: yes
+project_dir: /workspace/django__django-11039
+commands_run:
+  - python -c "test logic verification" (see below)
+  - python tests/runtests.py migrations.test_commands (FAILED - Python 3.13 lacks 'cgi' module required by Django 3.0)
+  - python -c "manual test of atomic and can_rollback_ddl logic" (PASSED)
+
+Manual logic verification:
+  atomic=True,  can_rollback_ddl=True  -> output_transaction=True  (wraps in BEGIN/COMMIT)
+  atomic=True,  can_rollback_ddl=False -> output_transaction=False (no wrap)
+  atomic=False, can_rollback_ddl=True  -> output_transaction=False (no wrap)
+  atomic=False, can_rollback_ddl=False -> output_transaction=False (no wrap)
+  All test cases PASSED.
+
+tests_passed: unknown (cannot run Django test suite due to Python 3.13 / cgi module incompatibility)
+Test runner error: ModuleNotFoundError: No module named 'cgi'

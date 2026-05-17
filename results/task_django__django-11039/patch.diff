@@ -1,5 +1,5 @@
 diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py
-index f0b663222..b51d1739a 100644
+index f0b6632..b51d173 100644
 --- a/django/core/management/commands/sqlmigrate.py
 +++ b/django/core/management/commands/sqlmigrate.py
 @@ -56,7 +56,7 @@ class Command(BaseCommand):

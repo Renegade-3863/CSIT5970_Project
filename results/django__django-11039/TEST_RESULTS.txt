@@ -1,41 +1,15 @@
-TEST_RESULTS:
-  - project_dir: /workspace/django__django-11039
-  - commands_run: |
-      python -c "
-        import sys; from types import ModuleType
-        cgi_mod = ModuleType('cgi')
-        cgi_mod.parse_header = lambda x: (x, {}); cgi_mod.FieldStorage = type('FieldStorage', (), {})
-        sys.modules['cgi'] = cgi_mod
+project_dir: /workspace/django__django-11039
+commands_run:
+  - python -c "test logic verification" (see below)
+  - python tests/runtests.py migrations.test_commands (FAILED - Python 3.13 lacks 'cgi' module required by Django 3.0)
+  - python -c "manual test of atomic and can_rollback_ddl logic" (PASSED)
 
-        import os; os.environ['DJANGO_SETTINGS_MODULE'] = 'test_settings'
-        sys.path.insert(0, '/workspace/django__django-11039')
-        sys.path.insert(0, '/workspace/django__django-11039/tests')
+Manual logic verification:
+  atomic=True,  can_rollback_ddl=True  -> output_transaction=True  (wraps in BEGIN/COMMIT)
+  atomic=True,  can_rollback_ddl=False -> output_transaction=False (no wrap)
+  atomic=False, can_rollback_ddl=True  -> output_transaction=False (no wrap)
+  atomic=False, can_rollback_ddl=False -> output_transaction=False (no wrap)
+  All test cases PASSED.
 
-        with open('/workspace/django__django-11039/tests/test_settings.py', 'w') as f:
-            f.write('''
-        DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}}
-        INSTALLED_APPS = ['django.contrib.contenttypes', 'django.contrib.auth', 'migrations']
-        SECRET_KEY = 'test-secret-key'
-        MIGRATION_MODULES = {'migrations': 'migrations.test_migrations'}
-        ''')
-
-        import django; django.setup()
-        from django.test.utils import setup_test_environment; setup_test_environment()
-        from django.db import connection; from django.core.management import call_command; import io
-        from unittest import mock
-
-        # Test 1: can_rollback_ddl=True -> should show BEGIN/COMMIT
-        out = io.StringIO(); call_command('sqlmigrate', 'migrations', '0001', stdout=out)
-        output = out.getvalue()
-        print('Test 1 (can_rollback_ddl=True): BEGIN in output =', 'BEGIN' in output)
-
-        # Test 2: can_rollback_ddl=False -> should NOT show BEGIN/COMMIT
-        with mock.patch.object(connection.features, 'can_rollback_ddl', False):
-            out = io.StringIO(); call_command('sqlmigrate', 'migrations', '0001', stdout=out)
-            output = out.getvalue()
-            print('Test 2 (can_rollback_ddl=False): BEGIN in output =', 'BEGIN' in output)
-      "
-  - tests_passed: yes
-  - results: |
-      Test 1 (can_rollback_ddl=True): BEGIN in output = True
-      Test 2 (can_rollback_ddl=False): BEGIN in output = False
+tests_passed: unknown (cannot run Django test suite due to Python 3.13 / cgi module incompatibility)
+Test runner error: ModuleNotFoundError: No module named 'cgi'

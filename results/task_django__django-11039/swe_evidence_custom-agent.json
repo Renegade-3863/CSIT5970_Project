@@ -7,17 +7,20 @@
       "task_type": "swe",
       "benchmark": "swe-bench-lite",
       "has_patch": true,
-      "patch": "diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py\nindex f0b663222..b51d1739a 100644\n--- a/django/core/management/commands/sqlmigrate.py\n+++ b/django/core/management/commands/sqlmigrate.py\n@@ -56,7 +56,7 @@ class Command(BaseCommand):\n         targets = [(app_label, migration.name)]\n \n         # Show begin/end around output only for atomic migrations\n-        self.output_transaction = migration.atomic\n+        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl\n \n         # Make a plan that represents just the requested migrations and show SQL\n         # for it\n",
+      "patch": "diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py\nindex f0b6632..b51d173 100644\n--- a/django/core/management/commands/sqlmigrate.py\n+++ b/django/core/management/commands/sqlmigrate.py\n@@ -56,7 +56,7 @@ class Command(BaseCommand):\n         targets = [(app_label, migration.name)]\n \n         # Show begin/end around output only for atomic migrations\n-        self.output_transaction = migration.atomic\n+        self.output_transaction = migration.atomic and connection.features.can_rollback_ddl\n \n         # Make a plan that represents just the requested migrations and show SQL\n         # for it",
       "has_test_command": true,
-      "last_pytest_summary": "All tests passed (3/3)",
-      "tests_passed": true,
-      "passed_count": 3,
+      "last_pytest_summary": "Could not run: Python 3.13 missing cgi module required by Django 3.0",
+      "tests_passed": false,
+      "passed_count": 0,
       "commands_run": [
-        "python -c \"...comprehensive verification tests...\""
+        "python -c manual verification",
+        "python tests/runtest.py migrations.test_commands"
       ],
-      "fatal_error_count": 0,
-      "fatal_errors_sample": [],
-      "has_tool_evidence": true,
+      "fatal_error_count": 1,
+      "fatal_errors_sample": [
+        "ModuleNotFoundError: No module named cgi"
+      ],
+      "has_tool_evidence": false,
       "has_test_results_section": true
     }
   ]
