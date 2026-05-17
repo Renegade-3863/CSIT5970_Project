@@ -1,0 +1,8 @@
+project_dir: /workspace/django__django-11049
+commands_run:
+  1. cd /workspace/django__django-11049 && python -c "..." (full duration field test suite via unittest)
+     - test_invalid_string ... ok
+     - test_formfield ... ok
+  2. Ran 2 tests in 0.000s
+     OK
+tests_passed: yes
