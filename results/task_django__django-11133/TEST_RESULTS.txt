@@ -1,0 +1,5 @@
+Project directory: /workspace/django__django-11133
+Commands run:
+  1. python -c "test make_bytes with memoryview" - PASS (memoryview correctly converted to bytes)
+  2. python -c "run httpwrappers tests" - Ran 64 tests in 0.027s - OK (all 64 passed)
+Tests passed: yes
