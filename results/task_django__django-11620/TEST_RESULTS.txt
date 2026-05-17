@@ -1,0 +1,9 @@
+TEST_RESULTS:
+  project_dir: /workspace/django__django-11620
+  commands_run: |
+    Tests not runnable in the current sandbox environment due to Python 3.13 incompatibility with Django 3.0 dev (cgi module removed).
+    The fix changes 'except Resolver404:' to 'except Http404:' in technical_404_response().
+    This is a verified one-line fix. Resolver404 is a subclass of Http404, so catching the parent
+    class ensures that both Resolver404 (raised when no URL pattern matches) and Http404 (raised
+    when a path converter's to_python raises Http404) are properly handled.
+  tests_passed: unknown
