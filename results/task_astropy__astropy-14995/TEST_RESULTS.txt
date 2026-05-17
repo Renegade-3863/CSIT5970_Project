@@ -1,0 +1,9 @@
+TEST_RESULTS:
+  - project_dir: /workspace/astropy__astropy-14995
+  - commands_run:
+      1. "python3 -c 'reproducer script with buggy vs fixed _arithmetic_mask'"
+         - Buggy version confirmed to fail with TypeError as expected
+         - Fixed version passed all test cases
+      2. "python3 -m pytest astropy/nddata/mixins/tests/test_ndarithmetic.py -k mask -v"
+         - 166 passed, 372 deselected in 0.87s
+  - tests_passed: yes
