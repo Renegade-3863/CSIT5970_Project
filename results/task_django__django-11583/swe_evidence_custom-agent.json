@@ -7,20 +7,16 @@
       "task_type": "swe",
       "benchmark": "swe-bench-lite",
       "has_patch": true,
-      "patch": "diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py\nindex 25c3b44..d3a273e 100644\n--- a/django/utils/autoreload.py\n+++ b/django/utils/autoreload.py\n@@ -139,7 +139,7 @@ def iter_modules_and_files(modules, extra_files):\n         path = Path(filename)\n         try:\n             resolved_path = path.resolve(strict=True).absolute()\n-        except FileNotFoundError:\n+        except (FileNotFoundError, ValueError):\n             # The module could have been removed, don't fail loudly if this\n             # is the case.\n             continue\n@@ -187,7 +187,7 @@ def sys_path_directories():\n         path = Path(path)\n         try:\n             resolved_path = path.resolve(strict=True).absolute()\n-        except FileNotFoundError:\n+        except (FileNotFoundError, ValueError):\n             continue\n         # If the path is a file (like a zip file), watch the parent directory.\n         if resolved_path.is_file():",
+      "patch": "diff --git a/django/utils/autoreload.py b/django/utils/autoreload.py\nindex 13019f7..732b528 100644\n--- a/django/utils/autoreload.py\n+++ b/django/utils/autoreload.py\n@@ -164,11 +164,11 @@ def iter_modules_and_files(modules, extra_files):\n                 # The module could have been removed, don't fail loudly if this\n                 # is the case.\n                 continue\n+            resolved_path = path.resolve().absolute()\n         except ValueError as e:\n             # Network filesystems may return null bytes in file paths.\n             logger.debug('\"%s\" raised when resolving path: \"%s\"', e, path)\n             continue\n-        resolved_path = path.resolve().absolute()\n         results.add(resolved_path)\n     return frozenset(results)\n \n@@ -213,7 +213,11 @@ def sys_path_directories():\n         path = Path(path)\n         if not path.exists():\n             continue\n-        resolved_path = path.resolve().absolute()\n+        try:\n+            resolved_path = path.resolve().absolute()\n+        except ValueError:\n+            # Network filesystems may return null bytes in file paths.\n+            continue\n         # If the path is a file (like a zip file), watch the parent directory.\n         if resolved_path.is_file():\n             yield resolved_path.parent",
       "has_test_command": true,
-      "last_pytest_summary": "Django 3.0 incompatible with Python 3.13 (cgi module removed). Manual testing via mock confirms ValueError is properly caught.",
-      "tests_passed": false,
-      "passed_count": 0,
+      "last_pytest_summary": "Ran 84 tests in 0.267s - OK (skipped=20)",
+      "tests_passed": true,
+      "passed_count": 64,
       "commands_run": [
-        "python -c \"from django.utils.autoreload import iter_modules_and_files; ... mocked ValueError(...)\" -> Caught ValueError: frozenset()",
-        "python -c \"from django.utils.autoreload import sys_path_directories; ... mocked ValueError(...)\" -> Caught ValueError: []",
-        "python tests/runtests.py utils_tests.test_autoreload -> ModuleNotFoundError: No module named \"cgi\""
+        "PYTHONPATH=. python tests/runtests.py utils_tests.test_autoreload -v2"
       ],
-      "fatal_error_count": 1,
-      "fatal_errors_sample": [
-        "ModuleNotFoundError: No module named \"cgi\" - Python 3.13 removed cgi module"
-      ],
+      "fatal_error_count": 0,
+      "fatal_errors_sample": [],
       "has_tool_evidence": true,
       "has_test_results_section": true
     }

@@ -1,10 +1,6 @@
 TEST_RESULTS:
-  project_dir: /workspace/task_django__django-11583
-  commands_run:
-    - python -c "from django.utils.autoreload import iter_modules_and_files; import pathlib; mock=type('',(),{'resolve':lambda s,strict=False: (_ for _ in ()).throw(ValueError('embedded null byte'))})(); pathlib.Path.resolve=mock.resolve; iter_modules_and_files.cache_clear(); result=iter_modules_and_files(frozenset(),frozenset(['/tmp/test.py'])); print('Caught ValueError:', result)"
-      -> Output: "Caught ValueError: frozenset() calls: 1"
-    - python -c "from django.utils.autoreload import sys_path_directories; import pathlib,sys; mock=type('',(),{'resolve':lambda s,strict=False: (_ for _ in ()).throw(ValueError('embedded null byte'))})(); pathlib.Path.resolve=mock.resolve; sys.path=['/tmp/test_path']; result=list(sys_path_directories()); print('Caught ValueError:', result)"
-      -> Output: "Caught ValueError: [] calls: 1"
-    - python tests/runtests.py utils_tests.test_autoreload
-      -> Failed: ModuleNotFoundError: No module named 'cgi' (Python 3.13 removed 'cgi' which Django 3.0 requires)
-  tests_passed: unknown (Django 3.0 is incompatible with Python 3.13 - 'cgi' module removed)
+  - project_dir: /workspace/django__django-11583
+  - commands_run: |
+      PYTHONPATH=. python tests/runtests.py utils_tests.test_autoreload -v2
+      Result: Ran 84 tests in 0.267s - OK (skipped=20)
+  - tests_passed: yes
