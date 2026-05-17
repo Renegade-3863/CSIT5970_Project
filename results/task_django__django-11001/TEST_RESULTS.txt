@@ -1,0 +1,7 @@
+TEST_RESULTS:
+  - project_dir: /workspace/django__django-11001
+  - commands_run: |
+      cd /workspace/django__django-11001/tests && python runtests.py ordering --verbosity=2
+      cd /workspace/django__django-11001/tests && python runtests.py expressions --parallel=1 --verbosity=2
+      cd /workspace/django__django-11001/tests && python runtests.py annotations db_functions --parallel=1 --verbosity=2
+  - tests_passed: yes
