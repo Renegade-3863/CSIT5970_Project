@@ -1,0 +1,8 @@
+TEST_RESULTS:
+- project_dir: /workspace/django__django-10914
+- commands_run:
+  1. cd /workspace/django__django-10914 && python tests/runtests.py test_utils.tests.OverrideStorageTests.test_override_file_upload_permissions --verbosity=2
+     Result: FAILED - ModuleNotFoundError: No module named 'cgi' (Python 3.13 removed cgi, incompatible with Django 2.2)
+  2. cd /workspace/django__django-10914 && python3 -c "import ast; ..." - AST verification
+     Result: FILE_UPLOAD_PERMISSIONS = 0o644 (confirmed)
+- tests_passed: unknown (environment incompatibility - Python 3.13 vs Django 2.2)
