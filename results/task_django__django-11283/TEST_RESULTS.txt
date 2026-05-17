@@ -1,0 +1,4 @@
+TEST_RESULTS:
+  project_dir: /workspace/django__django-11283
+  commands_run: git diff --cached
+  tests_passed: unknown (Python 3.13 incompatible with Django 2.2 dependencies)
