@@ -1,0 +1,36 @@
+=== Test Results ===
+
+Project: django/django
+Instance ID: django__django-11019
+Base Commit: 93e892bb645b16ebaf287beb5fe7f3ffe8d10408
+
+Tests Run:
+1. Test from issue description (widget1 + widget2 + widget3 with color-picker.js, text-editor.js, text-editor-extras.js)
+   - Merged JS: ['text-editor.js', 'text-editor-extras.js', 'color-picker.js']
+   - Warnings: 0
+   - PASS
+
+2. merge() unit tests (6 test cases)
+   - All PASS
+
+3. merge warning test
+   - PASS
+
+4. test_merge_js_three_way (updated expectation)
+   - PASS
+
+5. test_merge_css_three_way
+   - PASS
+
+6. test_combine_media
+   - PASS
+
+7. Media.__add__ preserves original _js_lists
+   - PASS
+
+All tests PASSED.
+
+Note: The test file tests/forms_tests/tests/test_media.py could not be run through the
+Django test runner because Python 3.13 removed the 'cgi' module which this old Django
+version depends on. Tests were verified through equivalent standalone Python scripts
+that import and test the Media class directly.

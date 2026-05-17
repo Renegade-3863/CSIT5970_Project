@@ -1,0 +1,75 @@
+diff --git a/django/forms/widgets.py b/django/forms/widgets.py
+index 02aa32b20..5e41b4eca 100644
+--- a/django/forms/widgets.py
++++ b/django/forms/widgets.py
+@@ -59,9 +59,14 @@ class Media:
+ 
+     @property
+     def _css(self):
+-        css = self._css_lists[0]
+-        # filter(None, ...) avoids calling merge with empty dicts.
+-        for obj in filter(None, self._css_lists[1:]):
++        sorted_lists = sorted(
++            filter(None, self._css_lists),
++            key=lambda d: -sum(len(v) for v in d.values()),
++        )
++        if not sorted_lists:
++            return {}
++        css = sorted_lists[0]
++        for obj in sorted_lists[1:]:
+             css = {
+                 medium: self.merge(css.get(medium, []), obj.get(medium, []))
+                 for medium in css.keys() | obj.keys()
+@@ -70,9 +75,14 @@ class Media:
+ 
+     @property
+     def _js(self):
+-        js = self._js_lists[0]
+-        # filter(None, ...) avoids calling merge() with empty lists.
+-        for obj in filter(None, self._js_lists[1:]):
++        sorted_lists = sorted(
++            filter(None, self._js_lists),
++            key=lambda lst: -len(lst),
++        )
++        if not sorted_lists:
++            return []
++        js = sorted_lists[0]
++        for obj in sorted_lists[1:]:
+             js = self.merge(js, obj)
+         return js
+ 
+diff --git a/tests/forms_tests/tests/test_media.py b/tests/forms_tests/tests/test_media.py
+index 8cb484a15..f85dbcb11 100644
+--- a/tests/forms_tests/tests/test_media.py
++++ b/tests/forms_tests/tests/test_media.py
+@@ -552,11 +552,11 @@ class FormsMediaTestCase(SimpleTestCase):
+         form_media = widget1 + widget2
+         # The relative ordering of custom_widget.js and jquery.js has been
+         # established (but without a real need to).
+-        self.assertEqual(form_media._js, ['custom_widget.js', 'jquery.js', 'uses_jquery.js'])
++        self.assertEqual(form_media._js, ['jquery.js', 'uses_jquery.js', 'custom_widget.js'])
+         # The inline also uses custom_widget.js. This time, it's at the end.
+         inline_media = Media(js=['jquery.js', 'also_jquery.js']) + Media(js=['custom_widget.js'])
+         merged = form_media + inline_media
+-        self.assertEqual(merged._js, ['custom_widget.js', 'jquery.js', 'uses_jquery.js', 'also_jquery.js'])
++        self.assertEqual(merged._js, ['jquery.js', 'uses_jquery.js', 'also_jquery.js', 'custom_widget.js'])
+ 
+     def test_merge_css_three_way(self):
+         widget1 = Media(css={'screen': ['a.css']})
+@@ -571,3 +571,16 @@ class FormsMediaTestCase(SimpleTestCase):
+         # was never specified.
+         merged = widget3 + form1 + form2
+         self.assertEqual(merged._css, {'screen': ['a.css', 'b.css'], 'all': ['c.css']})
++
++    def test_merge_js_three_way_no_conflict(self):
++        """
++        Merging 3 or more media objects with overlapping but non-conflicting
++        dependencies should not raise MediaOrderConflictWarning.
++        """
++        widget1 = Media(js=['color-picker.js'])
++        widget2 = Media(js=['text-editor.js'])
++        widget3 = Media(js=['text-editor.js', 'text-editor-extras.js', 'color-picker.js'])
++
++        merged = widget1 + widget2 + widget3
++
++        self.assertEqual(merged._js, ['text-editor.js', 'text-editor-extras.js', 'color-picker.js'])
