@@ -1,0 +1,12 @@
+TEST_RESULTS:
+- project_dir: /workspace/task_django__django-10924
+- commands_run:
+  1. python -m unittest tests/forms_tests/field_tests/test_filepathfield.py
+     Result: Ran 8 tests, 7 passed, 1 error (pre-existing Python 3.13 env issue: cgi module removed)
+  2. python -c "integration tests with callable path"
+     Result: All 3 integration tests passed (string path, callable path, same choices)
+  3. python -c "model field integration tests"  
+     Result: All 3 tests passed (model stores callable, deconstruct preserves callable, formfield resolves callable)
+  4. python -m unittest tests/field_deconstruction/tests.FieldDeconstructionTests.test_file_path_field
+     Result: 1 test, passed
+- tests_passed: yes (core functionality tests all pass; the 1 failure is pre-existing)

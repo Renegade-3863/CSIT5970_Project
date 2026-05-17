@@ -1,0 +1,25 @@
+{
+  "config": "custom-agent",
+  "items": [
+    {
+      "item_id": "django__django-10924",
+      "category": "swe",
+      "task_type": "swe",
+      "benchmark": "swe-bench-lite",
+      "has_patch": true,
+      "patch": "diff --git a/django/forms/fields.py b/django/forms/fields.py\nindex a977256525..1016d461a2 100644\n--- a/django/forms/fields.py\n+++ b/django/forms/fields.py\n@@ -1078,6 +1078,8 @@ class MultiValueField(Field):\n class FilePathField(ChoiceField):\n     def __init__(self, path, *, match=None, recursive=False, allow_files=True,\n                  allow_folders=False, **kwargs):\n+        if callable(path):\n+            path = path()\n         self.path, self.match, self.recursive = path, match, recursive\n         self.allow_files, self.allow_folders = allow_files, allow_folders\n         super().__init__(choices=(), **kwargs)\n",
+      "has_test_command": true,
+      "last_pytest_summary": "Ran 8 tests in 0.070s - FAILED (errors=1). The 1 error is pre-existing Python 3.13 env issue (cgi module removed). All 7 other tests passed including 1 FilePathField-specific test. Integration tests all passed.",
+      "tests_passed": false,
+      "passed_count": 7,
+      "commands_run": [
+        "python -m unittest tests/forms_tests/field_tests/test_filepathfield.py",
+        "python -m unittest tests/field_deconstruction/tests.FieldDeconstructionTests.test_file_path_field"
+      ],
+      "fatal_error_count": 0,
+      "fatal_errors_sample": [],
+      "has_tool_evidence": true,
+      "has_test_results_section": true
+    }
+  ]
+}
