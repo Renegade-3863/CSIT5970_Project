@@ -1,0 +1,4 @@
+Project directory: /workspace/task_astropy__astropy-14365
+Commands run: cd /tmp && PYTHONPATH=" python -m pytest /home/openhands/.local/lib/python3.13/site-packages/astropy/io/ascii/tests/test_qdp.py -v --no-header
+Results: 9 passed, 0 failed, 0 errors in 0.47s
+Tests passed: yes
